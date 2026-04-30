@@ -1,0 +1,42 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy-staging:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Get image tag from CI
+        run: |
+          echo "IMAGE_TAG=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_ENV
+      - name: Simulate deployment to staging
+        run: |
+          echo "Deploying image ghcr.io/${{ github.repository_owner }}/devops-cicd-lab:${IMAGE_TAG} to staging"
+          echo "Deployment successful"
+
+  smoke-test:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate smoke test
+        run: |
+          echo "Running smoke tests on staging..."
+          echo "Smoke tests passed"
+
+  deploy-production:
+    needs: smoke-test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Approve deployment (manual required)
+        run: |
+          echo "Waiting for manual approval in GitHub UI"
+          echo "Deploying to production with image tag from staging"
