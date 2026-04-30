@@ -21,7 +21,7 @@ jobs:
           cd app
           pip install -r requirements.txt
       - name: Upload source code as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source
           path: app/
@@ -65,7 +65,7 @@ jobs:
           pytest tests/ --junitxml=test-results.xml
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: app/test-results.xml
