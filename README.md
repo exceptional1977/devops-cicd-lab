@@ -3,3 +3,4 @@
 
 ## Описание
 Проект для демонстрации CI/CD пайплайна на GitHub Actions.
+## Feature flag demo
